@@ -145,7 +145,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
 
         {/* Navigation */}
-        <nav className={`flex-1 space-y-2 overflow-y-auto custom-scrollbar ${sidebarOpen ? 'px-4 py-4' : 'px-2 py-4'}`}>
+        <nav className={`flex-1 space-y-2 overflow-y-auto overflow-x-hidden custom-scrollbar ${sidebarOpen ? 'px-4 py-4' : 'px-2 py-4'}`}>
             <SidebarItem to="/dashboard" icon={Home} label="داشبورد" active={location.pathname === '/dashboard'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/my-courses" icon={BookMarked} label="درس‌های من" active={location.pathname.startsWith('/my-courses') || location.pathname.startsWith('/course/')} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/messages" icon={MessageSquare} label="پیام‌ها" active={location.pathname === '/messages'} onClick={closeSidebar} expanded={sidebarOpen} />
