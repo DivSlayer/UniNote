@@ -1,6 +1,7 @@
 <h1 align="center"> UniNote </h1>
 <p align="center"> The Comprehensive Collaborative Hub for Course Notes and Academic Excellence </p>
 
+[Preview]("https://divslayer.hithub.io/UniNote")
 <p align="center">
   <img alt="Build" src="https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge">
   <img alt="Issues" src="https://img.shields.io/badge/Issues-0%20Open-blue?style=for-the-badge">
