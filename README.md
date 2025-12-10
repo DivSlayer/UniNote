@@ -1,3 +1,4 @@
+![alt-text](banner.png "Header Card")
 <h1 align="center"> UniNote </h1>
 <p align="center"> The Comprehensive Collaborative Hub for Course Notes and Academic Excellence </p>
 
