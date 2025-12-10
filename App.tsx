@@ -34,6 +34,8 @@ import AddCoursePage from './pages/AddCourse';
 import CourseDetailsPage from './pages/CourseDetails';
 import MessagesPage from './pages/Messages';
 import NotificationsPage from './pages/Notifications';
+import LoginPage from './pages/Login';
+import ForgotPasswordPage from './pages/ForgotPassword';
 
 // Layout Components
 const SidebarItem = ({ 
@@ -169,7 +171,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         {/* Footer Actions */}
         <div className={`border-t border-slate-100 flex-shrink-0 ${sidebarOpen ? 'p-4' : 'p-2'}`}>
-            <button className={`
+            <Link to="/login" className={`
                 flex w-full items-center gap-x-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors
                 ${sidebarOpen ? 'px-4 py-3' : 'p-3 justify-center'}
             `}>
@@ -177,7 +179,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 <span className={`font-medium text-sm whitespace-nowrap transition-all duration-300 overflow-hidden ${sidebarOpen ? 'w-auto opacity-100' : 'w-0 opacity-0 hidden'}`}>
                     خروج از حساب
                 </span>
-            </button>
+            </Link>
         </div>
       </aside>
 
@@ -212,25 +214,34 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 export default function App() {
   return (
     <HashRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/upload" element={<UploadPage />} />
-          <Route path="/leaderboard" element={<LeaderboardPage />} />
-          <Route path="/moderation" element={<ModerationPage />} />
-          <Route path="/class-approval" element={<ModerationPage />} />
-          <Route path="/note/:id" element={<NoteDetailsPage />} />
-          <Route path="/course/:id" element={<CourseDetailsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/profile/:id" element={<ProfilePage />} />
-          <Route path="/profile/edit" element={<ProfileEditPage />} />
-          <Route path="/my-courses" element={<MyCoursesPage />} />
-          <Route path="/my-courses/add" element={<AddCoursePage />} />
-          <Route path="/messages" element={<MessagesPage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        {/* Auth Routes - No Layout */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
+        {/* Application Routes - With Layout */}
+        <Route path="/*" element={
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/upload" element={<UploadPage />} />
+              <Route path="/leaderboard" element={<LeaderboardPage />} />
+              <Route path="/moderation" element={<ModerationPage />} />
+              <Route path="/class-approval" element={<ModerationPage />} />
+              <Route path="/note/:id" element={<NoteDetailsPage />} />
+              <Route path="/course/:id" element={<CourseDetailsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/profile/:id" element={<ProfilePage />} />
+              <Route path="/profile/edit" element={<ProfileEditPage />} />
+              <Route path="/my-courses" element={<MyCoursesPage />} />
+              <Route path="/my-courses/add" element={<AddCoursePage />} />
+              <Route path="/messages" element={<MessagesPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+            </Routes>
+          </Layout>
+        } />
+      </Routes>
     </HashRouter>
   );
 }
