@@ -146,7 +146,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         {/* Navigation */}
         <nav className={`flex-1 space-y-2 overflow-y-auto custom-scrollbar ${sidebarOpen ? 'px-4 py-4' : 'px-2 py-4'}`}>
-            <SidebarItem to="/" icon={Home} label="داشبورد" active={location.pathname === '/'} onClick={closeSidebar} expanded={sidebarOpen} />
+            <SidebarItem to="/dashboard" icon={Home} label="داشبورد" active={location.pathname === '/dashboard'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/my-courses" icon={BookMarked} label="درس‌های من" active={location.pathname.startsWith('/my-courses') || location.pathname.startsWith('/course/')} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/messages" icon={MessageSquare} label="پیام‌ها" active={location.pathname === '/messages'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/search" icon={Search} label="جستجو و کاوش" active={location.pathname === '/search'} onClick={closeSidebar} expanded={sidebarOpen} />
@@ -171,7 +171,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         {/* Footer Actions */}
         <div className={`border-t border-slate-100 flex-shrink-0 ${sidebarOpen ? 'p-4' : 'p-2'}`}>
-            <Link to="/login" className={`
+            <Link to="/" className={`
                 flex w-full items-center gap-x-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors
                 ${sidebarOpen ? 'px-4 py-3' : 'p-3 justify-center'}
             `}>
@@ -216,14 +216,14 @@ export default function App() {
     <HashRouter>
       <Routes>
         {/* Auth Routes - No Layout */}
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Application Routes - With Layout */}
         <Route path="/*" element={
           <Layout>
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/upload" element={<UploadPage />} />
               <Route path="/leaderboard" element={<LeaderboardPage />} />

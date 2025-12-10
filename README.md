@@ -1,20 +1,98 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+## English
 
-# Run and deploy your AI Studio app
+**UniNote** is a sample Persian UI for a university notes sharing platform built with React + Vite. The app is UI-only and uses mock data (no backend).
 
-This contains everything you need to run your app locally.
+### Features
+- RTL-friendly layout with Vazirmatn Persian font
+- Ready-made pages: Dashboard, Search, Upload, Messages, Profile, Leaderboard, etc.
+- Mock data for users, notes, and notifications
+- Responsive design via Tailwind CDN and Lucide icons
 
-View your app in AI Studio: https://ai.studio/apps/drive/19nufT2bYzDK15hmeF7MnJlYL8Bwd8AXv
+### Prerequisites
+- Node.js 18+ (preferably 20+)
+- npm (or compatible package manager)
 
-## Run Locally
+### Setup
+```bash
+npm install
+npm run dev
+```
+Then open `http://localhost:3000/` in your browser.
 
-**Prerequisites:**  Node.js
+### Scripts
+- `npm run dev` — start Vite dev server
+- `npm run build` — build for production
+- `npm run preview` — preview the production build
 
+### Project Structure
+- `index.tsx` — React entry point
+- `App.tsx` — routing and main layout (HashRouter)
+- `pages/` — feature pages (Dashboard, Search, Upload, Profile, etc.)
+- `constants.ts` — mock data and helpers
+- `services/` — services (e.g., `geminiService.ts`)
+- `index.html` — base template with Tailwind CDN and Persian font
+- `vite.config.ts` — Vite config and alias
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Configuration
+- Default port: `3000` (`vite.config.ts`)
+- Uses HashRouter for easier static hosting
+- Optional env: `GEMINI_API_KEY` for `services/geminiService.ts`
+
+### Development Notes
+- Data is static; wire up your own backend if needed.
+- Styles load from Tailwind CDN; for production you can install Tailwind locally and enable purge.
+- RTL by default; adjust `dir` and classes if you need LTR.
+
+### License
+Sample project with no specific license; review before production use.
+
+---
+
+## فارسی
+
+**یونی‌نوت** یک رابط کاربری نمونه برای سامانه اشتراک جزوات دانشگاهی با React + Vite است. این پروژه فقط UI دارد و از داده‌های ماک استفاده می‌کند (بدون بک‌اند).
+
+### ویژگی‌ها
+- پشتیبانی کامل از راست‌به‌چپ و فونت فارسی Vazirmatn
+- چندین صفحه آماده: داشبورد، جستجو، بارگذاری، پیام‌ها، پروفایل، لیدربورد و …
+- داده‌های ماک برای کاربران، جزوات و اعلان‌ها
+- طراحی واکنش‌گرا با Tailwind CDN و آیکون‌های Lucide
+
+### پیش‌نیازها
+- Node.js 18+ (ترجیحاً 20+)
+- npm (یا هر مدیر بسته سازگار)
+
+### راه‌اندازی
+```bash
+npm install
+npm run dev
+```
+سپس مرورگر را روی `http://localhost:3000/` باز کنید.
+
+### اسکریپت‌ها
+- `npm run dev` — اجرای سرور توسعه Vite
+- `npm run build` — ساخت خروجی تولید
+- `npm run preview` — پیش‌نمایش خروجی ساخته‌شده
+
+### ساختار پروژه
+- `index.tsx` — نقطه ورود React
+- `App.tsx` — مسیریابی و لایه‌بندی اصلی (HashRouter)
+- `pages/` — صفحات مختلف (Dashboard، Search، Upload، Profile و …)
+- `constants.ts` — داده‌های ماک و توابع کمکی
+- `services/` — سرویس‌ها (مثلاً `geminiService.ts`)
+- `index.html` — قالب پایه شامل Tailwind CDN و فونت فارسی
+- `vite.config.ts` — پیکربندی Vite و alias
+
+### پیکربندی
+- پورت پیش‌فرض: `3000` (`vite.config.ts`)
+- استفاده از HashRouter برای سازگاری با هاست‌های استاتیک
+- متغیر محیطی اختیاری: `GEMINI_API_KEY` برای `services/geminiService.ts`
+
+### نکات توسعه
+- داده‌ها ثابت هستند؛ در صورت نیاز به API واقعی، به بک‌اند خود متصل شوید.
+- استایل از Tailwind CDN بارگذاری می‌شود؛ برای تولید می‌توانید Tailwind را محلی نصب و purge را فعال کنید.
+- UI راست‌به‌چپ است؛ در صورت نیاز به چپ‌به‌راست، مقدار `dir` و کلاس‌ها را تغییر دهید.
+
+### لایسنس
+پروژه نمونه است و لایسنس مشخصی ندارد؛ پیش از استفاده در محیط واقعی، بررسی‌های لازم را انجام دهید.
+
