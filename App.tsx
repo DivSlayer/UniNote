@@ -15,7 +15,9 @@ import {
   MessageSquare,
   ChevronRight,
   ChevronLeft,
-  ClipboardCheck
+  ClipboardCheck,
+  QrCode,
+  UserPlus
 } from 'lucide-react';
 import { CURRENT_USER } from './constants';
 import { UserRole } from './types';
@@ -25,9 +27,9 @@ import Dashboard from './pages/Dashboard';
 import SearchPage from './pages/Search';
 import UploadPage from './pages/Upload';
 import LeaderboardPage from './pages/Leaderboard';
-import ModerationPage from './pages/Moderation/Moderation';
+import ModerationPage from './pages/Moderation';
 import NoteDetailsPage from './pages/NoteDetails';
-import ProfilePage from './pages/Profile/Profile';
+import ProfilePage from './pages/Profile';
 import ProfileEditPage from './pages/ProfileEdit';
 import MyCoursesPage from './pages/MyCourses';
 import AddCoursePage from './pages/AddCourse';
@@ -36,6 +38,7 @@ import MessagesPage from './pages/Messages';
 import NotificationsPage from './pages/Notifications';
 import LoginPage from './pages/Login';
 import ForgotPasswordPage from './pages/ForgotPassword';
+import MyQRCodePage from './pages/MyQRCode';
 
 // Layout Components
 const SidebarItem = ({ 
@@ -145,13 +148,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
 
         {/* Navigation */}
-        <nav className={`flex-1 space-y-2 overflow-y-auto overflow-x-hidden custom-scrollbar ${sidebarOpen ? 'px-4 py-4' : 'px-2 py-4'}`}>
-            <SidebarItem to="/dashboard" icon={Home} label="داشبورد" active={location.pathname === '/dashboard'} onClick={closeSidebar} expanded={sidebarOpen} />
+        <nav className={`flex-1 space-y-2 overflow-y-auto custom-scrollbar ${sidebarOpen ? 'px-4 py-4' : 'px-2 py-4'}`}>
+            <SidebarItem to="/" icon={Home} label="داشبورد" active={location.pathname === '/'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/my-courses" icon={BookMarked} label="درس‌های من" active={location.pathname.startsWith('/my-courses') || location.pathname.startsWith('/course/')} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/messages" icon={MessageSquare} label="پیام‌ها" active={location.pathname === '/messages'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/search" icon={Search} label="جستجو و کاوش" active={location.pathname === '/search'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/upload" icon={UploadCloud} label="بارگذاری جزوه" active={location.pathname === '/upload'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/leaderboard" icon={Award} label="برترین‌ها" active={location.pathname === '/leaderboard'} onClick={closeSidebar} expanded={sidebarOpen} />
+            <SidebarItem to="/my-qr" icon={QrCode} label="کارت دیجیتال" active={location.pathname === '/my-qr'} onClick={closeSidebar} expanded={sidebarOpen} />
             
             {(isAdmin || isClassRep) && (
             <>
@@ -163,7 +167,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   <SidebarItem to="/moderation" icon={ShieldCheck} label="بررسی محتوا" active={location.pathname === '/moderation'} onClick={closeSidebar} expanded={sidebarOpen} />
                 )}
                 {isClassRep && (
-                  <SidebarItem to="/class-approval" icon={ClipboardCheck} label="تایید جزوات کلاس" active={location.pathname === '/class-approval'} onClick={closeSidebar} expanded={sidebarOpen} />
+                  <>
+                    <SidebarItem to="/class-approval" icon={ClipboardCheck} label="تایید جزوات کلاس" active={location.pathname === '/class-approval'} onClick={closeSidebar} expanded={sidebarOpen} />
+                  </>
                 )}
             </>
             )}
@@ -171,7 +177,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         {/* Footer Actions */}
         <div className={`border-t border-slate-100 flex-shrink-0 ${sidebarOpen ? 'p-4' : 'p-2'}`}>
-            <Link to="/" className={`
+            <Link to="/login" className={`
                 flex w-full items-center gap-x-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors
                 ${sidebarOpen ? 'px-4 py-3' : 'p-3 justify-center'}
             `}>
@@ -216,14 +222,14 @@ export default function App() {
     <HashRouter>
       <Routes>
         {/* Auth Routes - No Layout */}
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Application Routes - With Layout */}
         <Route path="/*" element={
           <Layout>
             <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/" element={<Dashboard />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/upload" element={<UploadPage />} />
               <Route path="/leaderboard" element={<LeaderboardPage />} />
@@ -238,6 +244,7 @@ export default function App() {
               <Route path="/my-courses/add" element={<AddCoursePage />} />
               <Route path="/messages" element={<MessagesPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/my-qr" element={<MyQRCodePage />} />
             </Routes>
           </Layout>
         } />

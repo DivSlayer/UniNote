@@ -13,11 +13,16 @@ import {
     MessageSquare, 
     MoreHorizontal,
     BadgeCheck,
-    Search
+    Search,
+    UserPlus,
+    QrCode,
+    ScanLine,
+    XCircle,
+    CheckCircle,
+    Loader2
 } from 'lucide-react';
 
 // Mock Extended Course Data
-// In a real app, this would come from an API based on the ID
 const COURSE_DATABASE: Record<string, any> = {
     'c1': { 
         id: 'c1', 
@@ -95,10 +100,28 @@ const CourseDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
     const course = id ? COURSE_DATABASE[id] : null;
     const [activeTab, setActiveTab] = useState<'NOTES' | 'MEMBERS'>('NOTES');
+    
+    // Initial Classmates Data
+    const [classmates, setClassmates] = useState([
+        ...LEADERBOARD_DATA.map(l => l.user).filter(u => u.role === UserRole.STUDENT && u.id !== CURRENT_USER.id),
+        { id: 'u10', name: 'مریم حسینی', role: UserRole.STUDENT, avatarUrl: 'https://picsum.photos/seed/u10/200', points: 100 },
+        { id: 'u11', name: 'کاوه رضایی', role: UserRole.STUDENT, avatarUrl: 'https://picsum.photos/seed/u11/200', points: 150 },
+        { id: 'u12', name: 'نیما کریمی', role: UserRole.STUDENT, avatarUrl: 'https://picsum.photos/seed/u12/200', points: 80 },
+    ]);
+
+    // Add Student State
+    const [showAddMember, setShowAddMember] = useState(false);
+    const [addCode, setAddCode] = useState('');
+    const [isScanning, setIsScanning] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
+    const [addError, setAddError] = useState('');
+    const [addSuccess, setAddSuccess] = useState(false);
 
     if (!course) {
         return <div className="text-center py-20 font-bold text-slate-500">درس مورد نظر یافت نشد.</div>;
     }
+
+    const canManageCourse = CURRENT_USER.role === UserRole.CLASS_REP || CURRENT_USER.role === UserRole.INSTRUCTOR;
 
     // Resolve Instructor
     const instructor = MOCK_INSTRUCTORS.find(u => u.id === course.instructorId) || {
@@ -112,13 +135,44 @@ const CourseDetailsPage = () => {
     // Filter Notes for this course
     const courseNotes = MOCK_NOTES.filter(n => n.course === course.title);
 
-    // Mock Classmates (Exclude current user and instructor, mix of mock data)
-    const classmates = [
-        ...LEADERBOARD_DATA.map(l => l.user).filter(u => u.role === UserRole.STUDENT && u.id !== CURRENT_USER.id),
-        { id: 'u10', name: 'مریم حسینی', role: UserRole.STUDENT, avatarUrl: 'https://picsum.photos/seed/u10/200', points: 100 },
-        { id: 'u11', name: 'کاوه رضایی', role: UserRole.STUDENT, avatarUrl: 'https://picsum.photos/seed/u11/200', points: 150 },
-        { id: 'u12', name: 'نیما کریمی', role: UserRole.STUDENT, avatarUrl: 'https://picsum.photos/seed/u12/200', points: 80 },
-    ];
+    // Add Student Handler (Direct Add)
+    const handleAddStudent = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!addCode) return;
+        
+        setAddError('');
+        setIsAdding(true);
+
+        // Simulate API call to verify code and add student
+        setTimeout(() => {
+            setIsAdding(false);
+            
+            // Mock Validation: Code must be at least 5 chars for this demo
+            if (addCode.length < 5) {
+                setAddError('کد وارد شده صحیح نمی‌باشد یا یافت نشد.');
+                return;
+            }
+            
+            // Mock Success: Create a new mock user
+            const mockNewUser = { 
+                id: `u-new-${Date.now()}`, 
+                name: 'دانشجوی جدید', 
+                role: UserRole.STUDENT, 
+                avatarUrl: `https://picsum.photos/seed/${addCode}/200`, 
+                points: 0 
+            };
+            
+            setAddSuccess(true);
+            
+            // Close modal after showing success
+            setTimeout(() => {
+                setClassmates(prev => [...prev, mockNewUser]);
+                setAddSuccess(false);
+                setShowAddMember(false);
+                setAddCode('');
+            }, 1500);
+        }, 1500);
+    };
 
     return (
         <div className="space-y-6">
@@ -174,7 +228,7 @@ const CourseDetailsPage = () => {
                     {/* Tabs */}
                     <div className="flex border-b border-slate-200">
                         <button 
-                            onClick={() => setActiveTab('NOTES')}
+                            onClick={() => { setActiveTab('NOTES'); setShowAddMember(false); }}
                             className={`px-6 py-4 font-bold text-sm border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'NOTES' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'}`}
                         >
                             <FileText size={18} />
@@ -214,40 +268,129 @@ const CourseDetailsPage = () => {
                         </div>
                     ) : (
                         <div className="bg-white rounded-xl border border-slate-200 p-6">
+                            {/* Header & Add Button */}
                             <div className="flex items-center justify-between mb-6">
                                 <h3 className="font-bold text-slate-800">لیست دانشجویان</h3>
-                                <div className="relative">
-                                    <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
-                                    <input type="text" placeholder="جستجو..." className="pl-3 pr-9 py-1.5 bg-slate-50 border-none rounded-lg text-xs w-48 focus:ring-1 focus:ring-blue-500" />
+                                <div className="flex gap-3">
+                                    {!showAddMember && (
+                                        <div className="relative">
+                                            <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                                            <input type="text" placeholder="جستجو..." className="pl-3 pr-9 py-1.5 bg-slate-50 border-none rounded-lg text-xs w-48 focus:ring-1 focus:ring-blue-500" />
+                                        </div>
+                                    )}
+                                    {canManageCourse && !showAddMember && (
+                                        <button 
+                                            onClick={() => setShowAddMember(true)}
+                                            className="flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-green-700 transition-colors"
+                                        >
+                                            <UserPlus size={14} />
+                                            افزودن دانشجو
+                                        </button>
+                                    )}
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Current User Card */}
-                                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
-                                    <img src={CURRENT_USER.avatarUrl} alt="" className="w-10 h-10 rounded-full" />
-                                    <div>
-                                        <p className="font-bold text-slate-900 text-sm">{CURRENT_USER.name} (شما)</p>
-                                        <p className="text-xs text-slate-500">دانشجو</p>
-                                    </div>
-                                </div>
-                                {/* Classmates */}
-                                {classmates.map(user => (
-                                    <div key={user.id} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition-colors border border-transparent hover:border-slate-100">
-                                        <div className="flex items-center gap-3">
-                                            <img src={user.avatarUrl} alt="" className="w-10 h-10 rounded-full" />
-                                            <div>
-                                                <Link to={`/profile/${user.id}`} className="font-bold text-slate-900 text-sm hover:text-blue-600 transition-colors">
-                                                    {user.name}
-                                                </Link>
-                                                <p className="text-xs text-slate-500">دانشجو</p>
-                                            </div>
-                                        </div>
-                                        <button className="text-slate-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-full transition-colors" title="پیام">
-                                            <MessageSquare size={16} />
+
+                            {/* Add Student UI */}
+                            {showAddMember ? (
+                                <div className="bg-slate-50 rounded-xl p-6 border border-slate-200 animate-in fade-in slide-in-from-top-4 duration-300">
+                                    <div className="flex justify-between items-center mb-6">
+                                        <h4 className="font-bold text-slate-800">افزودن دانشجو به کلاس</h4>
+                                        <button onClick={() => {setShowAddMember(false); setAddError(''); setAddCode('');}} className="text-slate-400 hover:text-slate-600">
+                                            <XCircle size={20} />
                                         </button>
                                     </div>
-                                ))}
-                            </div>
+                                    
+                                    {addSuccess ? (
+                                        <div className="text-center py-8 text-green-600">
+                                            <CheckCircle className="w-16 h-16 mx-auto mb-4" />
+                                            <p className="font-bold">دانشجو با موفقیت اضافه شد!</p>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-6">
+                                            <div className="flex gap-2">
+                                                <button 
+                                                    onClick={() => setIsScanning(false)}
+                                                    className={`flex-1 py-2 rounded-lg text-xs font-bold transition-colors border ${!isScanning ? 'bg-white border-blue-500 text-blue-600' : 'bg-transparent border-slate-200 text-slate-500'}`}
+                                                >
+                                                    کد دانشجو
+                                                </button>
+                                                <button 
+                                                    onClick={() => setIsScanning(true)}
+                                                    className={`flex-1 py-2 rounded-lg text-xs font-bold transition-colors border ${isScanning ? 'bg-white border-blue-500 text-blue-600' : 'bg-transparent border-slate-200 text-slate-500'}`}
+                                                >
+                                                    اسکن QR
+                                                </button>
+                                            </div>
+
+                                            {isScanning ? (
+                                                <div className="aspect-square max-w-[200px] mx-auto bg-slate-900 rounded-xl flex flex-col items-center justify-center text-slate-400 relative overflow-hidden">
+                                                     <ScanLine size={48} className="animate-pulse mb-2 text-blue-500" />
+                                                     <span className="text-xs">دوربین را نگه دارید</span>
+                                                     <button 
+                                                        onClick={() => { setAddCode('U1-VALID-CODE'); setIsScanning(false); }}
+                                                        className="absolute bottom-4 px-3 py-1 bg-white/20 text-white text-[10px] rounded-full backdrop-blur-sm"
+                                                     >
+                                                        شبیه‌سازی اسکن
+                                                     </button>
+                                                </div>
+                                            ) : (
+                                                <form onSubmit={handleAddStudent} className="flex gap-2">
+                                                    <input 
+                                                        type="text" 
+                                                        value={addCode}
+                                                        onChange={(e) => setAddCode(e.target.value)}
+                                                        placeholder="کد دانشجو (مثال: U1-8492)"
+                                                        className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded-xl focus:outline-none focus:border-blue-500 text-left dir-ltr"
+                                                    />
+                                                    <button 
+                                                        type="submit" 
+                                                        disabled={!addCode || isAdding}
+                                                        className="bg-green-600 text-white px-6 rounded-xl hover:bg-green-700 disabled:opacity-50 font-bold text-sm flex items-center gap-2"
+                                                    >
+                                                        {isAdding ? <Loader2 className="animate-spin" size={18} /> : 'افزودن'}
+                                                    </button>
+                                                </form>
+                                            )}
+
+                                            {addError && (
+                                                <div className="bg-red-50 text-red-600 text-xs p-3 rounded-lg flex items-center justify-center gap-2">
+                                                    <XCircle size={14} />
+                                                    {addError}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                /* Classmates Grid */
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Current User Card */}
+                                    <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                                        <img src={CURRENT_USER.avatarUrl} alt="" className="w-10 h-10 rounded-full" />
+                                        <div>
+                                            <p className="font-bold text-slate-900 text-sm">{CURRENT_USER.name} (شما)</p>
+                                            <p className="text-xs text-slate-500">دانشجو</p>
+                                        </div>
+                                    </div>
+                                    {/* Classmates List */}
+                                    {classmates.map(user => (
+                                        <div key={user.id} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition-colors border border-transparent hover:border-slate-100">
+                                            <div className="flex items-center gap-3">
+                                                <img src={user.avatarUrl} alt="" className="w-10 h-10 rounded-full" />
+                                                <div>
+                                                    <Link to={`/profile/${user.id}`} className="font-bold text-slate-900 text-sm hover:text-blue-600 transition-colors">
+                                                        {user.name}
+                                                    </Link>
+                                                    <p className="text-xs text-slate-500">دانشجو</p>
+                                                </div>
+                                            </div>
+                                            <button className="text-slate-400 hover:text-blue-600 p-2 hover:bg-blue-50 rounded-full transition-colors" title="پیام">
+                                                <MessageSquare size={16} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

@@ -21,7 +21,7 @@ const LoginPage = () => {
             if (email && password) {
                 // Mock success - in real app, check credentials here
                 setIsLoading(false);
-                navigate('/dashboard');
+                navigate('/');
             } else {
                 setIsLoading(false);
                 setError('لطفا نام کاربری و رمز عبور را وارد کنید.');
@@ -63,7 +63,6 @@ const LoginPage = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full pl-4 pr-11 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-left dir-ltr"
                                 placeholder="example@uni.ac.ir"
-                                required
                             />
                             <User className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                         </div>
@@ -83,7 +82,6 @@ const LoginPage = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full pl-11 pr-11 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-left dir-ltr"
                                 placeholder="••••••••"
-                                required
                             />
                             <Lock className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                             <button 
@@ -120,6 +118,13 @@ const LoginPage = () => {
                         </p>
                     </div>
                 </form>
+
+                <div className="bg-slate-50 p-4 text-center border-t border-slate-100">
+                    <Link to="/" className="text-slate-500 text-xs hover:text-slate-700 flex items-center justify-center gap-1">
+                        بازگشت به صفحه اصلی
+                        <ArrowLeft size={12} />
+                    </Link>
+                </div>
             </div>
         </div>
     );
