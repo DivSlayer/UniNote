@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link, useLocation, BrowserRouter } from 'react-router-dom';
 import { 
   Home, 
   Search, 
@@ -27,9 +27,9 @@ import Dashboard from './pages/Dashboard';
 import SearchPage from './pages/Search';
 import UploadPage from './pages/Upload';
 import LeaderboardPage from './pages/Leaderboard';
-import ModerationPage from './pages/Moderation';
+import ModerationPage from './pages/Moderation/Moderation';
 import NoteDetailsPage from './pages/NoteDetails';
-import ProfilePage from './pages/Profile';
+import ProfilePage from './pages/Profile/Profile';
 import ProfileEditPage from './pages/ProfileEdit';
 import MyCoursesPage from './pages/MyCourses';
 import AddCoursePage from './pages/AddCourse';
@@ -148,7 +148,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
 
         {/* Navigation */}
-        <nav className={`flex-1 space-y-2 overflow-y-auto custom-scrollbar ${sidebarOpen ? 'px-4 py-4' : 'px-2 py-4'}`}>
+        <nav className={`flex-1 space-y-2 overflow-y-auto overflow-x-hidden custom-scrollbar ${sidebarOpen ? 'px-4 py-4' : 'px-2 py-4'}`}>
             <SidebarItem to="/" icon={Home} label="داشبورد" active={location.pathname === '/'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/my-courses" icon={BookMarked} label="درس‌های من" active={location.pathname.startsWith('/my-courses') || location.pathname.startsWith('/course/')} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/messages" icon={MessageSquare} label="پیام‌ها" active={location.pathname === '/messages'} onClick={closeSidebar} expanded={sidebarOpen} />
@@ -219,7 +219,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         {/* Auth Routes - No Layout */}
         <Route path="/login" element={<LoginPage />} />
@@ -249,6 +249,6 @@ export default function App() {
           </Layout>
         } />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
