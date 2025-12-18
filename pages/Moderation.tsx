@@ -1,7 +1,6 @@
-import './_moderation.scss';
 import React, { useState } from 'react';
-import { MOCK_NOTES } from '../../constants';
-import { NoteStatus, Note } from '../../types';
+import { MOCK_NOTES } from '../constants';
+import { NoteStatus, Note } from '../types';
 import { CheckCircle, XCircle, FileText, AlertCircle } from 'lucide-react';
 
 const ModerationPage = () => {
@@ -22,7 +21,7 @@ const ModerationPage = () => {
 
     return (
         <div className="max-w-5xl mx-auto">
-            <div className="moderation__header flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-8">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900">پنل مدیریت محتوا</h1>
                     <p className="text-slate-500">بررسی و تایید جزوات بارگذاری شده توسط دانشجویان.</p>
@@ -79,7 +78,7 @@ const ModerationPage = () => {
                                 </div>
 
                                 {/* Actions */}
-                                <div className="function__buttons flex gap-3">
+                                <div className="flex gap-3">
                                     <button 
                                         onClick={() => handleApprove(note.id)}
                                         className="flex-1 bg-green-600 text-white py-2 rounded-xl font-bold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"

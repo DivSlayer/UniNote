@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import { UploadCloud, File, X, Check, Loader2, Search, User } from 'lucide-react';
+import { UploadCloud, File, X, Check, Loader2, Search, User, Globe, Users, Lock, ChevronDown, BookOpen } from 'lucide-react';
 import { NoteStatus, UserRole } from '../types';
-import { CURRENT_USER, MOCK_INSTRUCTORS } from '../constants';
+import { CURRENT_USER, MOCK_INSTRUCTORS, MOCK_MY_COURSES } from '../constants';
 
 const UploadPage = () => {
   const [dragActive, setDragActive] = useState(false);
@@ -15,6 +15,8 @@ const UploadPage = () => {
   const [course, setCourse] = useState('');
   const [university, setUniversity] = useState('');
   const [description, setDescription] = useState('');
+  const [visibility, setVisibility] = useState<'PUBLIC' | 'CLASS'>('PUBLIC');
+  const [selectedClassId, setSelectedClassId] = useState('');
   
   // Teacher Search State
   const [teacherSearch, setTeacherSearch] = useState('');
@@ -51,6 +53,11 @@ const UploadPage = () => {
     e.preventDefault();
     if (!file) return;
 
+    if (visibility === 'CLASS' && !selectedClassId) {
+        alert('لطفا کلاسی که می‌خواهید جزوه را برای آن ارسال کنید انتخاب نمایید.');
+        return;
+    }
+
     setUploading(true);
     // Simulate upload delay
     setTimeout(() => {
@@ -71,6 +78,16 @@ const UploadPage = () => {
       setShowTeacherSuggestions(false);
   };
 
+  const handleClassSelect = (classId: string) => {
+      setSelectedClassId(classId);
+      const selectedClass = MOCK_MY_COURSES.find(c => c.id === classId);
+      if (selectedClass) {
+          setCourse(selectedClass.title);
+          // Optional: Pre-fill instructor if known
+          // setTeacherSearch(selectedClass.instructor);
+      }
+  };
+
   if (success) {
       return (
           <div className="flex flex-col items-center justify-center h-full min-h-[50vh] text-center">
@@ -86,6 +103,8 @@ const UploadPage = () => {
                     setTitle(''); 
                     setTeacherSearch(''); 
                     setSelectedTeacherId(null);
+                    setVisibility('PUBLIC');
+                    setSelectedClassId('');
                 }}
                 className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors"
               >
@@ -144,6 +163,73 @@ const UploadPage = () => {
                     </div>
                 )}
             </div>
+
+            {/* Visibility Selector */}
+            <div className="space-y-3">
+                <label className="text-sm font-bold text-slate-700">سطح دسترسی</label>
+                <div className="grid grid-cols-2 gap-4">
+                    <button
+                        type="button"
+                        onClick={() => setVisibility('PUBLIC')}
+                        className={`p-4 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                            visibility === 'PUBLIC' 
+                            ? 'border-blue-500 bg-blue-50 text-blue-700' 
+                            : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                        }`}
+                    >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${visibility === 'PUBLIC' ? 'bg-blue-200' : 'bg-slate-100'}`}>
+                            <Globe size={20} />
+                        </div>
+                        <div className="text-right">
+                            <span className="block font-bold text-sm">عمومی</span>
+                            <span className="block text-xs opacity-70">قابل مشاهده برای همه</span>
+                        </div>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setVisibility('CLASS')}
+                        className={`p-4 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                            visibility === 'CLASS' 
+                            ? 'border-blue-500 bg-blue-50 text-blue-700' 
+                            : 'border-slate-200 hover:border-slate-300 text-slate-600'
+                        }`}
+                    >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${visibility === 'CLASS' ? 'bg-blue-200' : 'bg-slate-100'}`}>
+                            <Users size={20} />
+                        </div>
+                        <div className="text-right">
+                            <span className="block font-bold text-sm">کلاسی</span>
+                            <span className="block text-xs opacity-70">فقط دانشجویان کلاس</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+             {/* Class Selector (Conditional) */}
+             {visibility === 'CLASS' && (
+                <div className="space-y-2 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <BookOpen size={16} />
+                        انتخاب کلاس مربوطه
+                    </label>
+                    <div className="relative">
+                        <select
+                            required={visibility === 'CLASS'}
+                            value={selectedClassId}
+                            onChange={(e) => handleClassSelect(e.target.value)}
+                            className="w-full px-4 py-3 appearance-none rounded-xl border-2 border-blue-100 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-800"
+                        >
+                            <option value="">لطفا یک کلاس را انتخاب کنید...</option>
+                            {MOCK_MY_COURSES.map(course => (
+                                <option key={course.id} value={course.id}>
+                                    {course.title} - {course.instructor}
+                                </option>
+                            ))}
+                        </select>
+                        <ChevronDown className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
+                    </div>
+                </div>
+            )}
 
             {/* Meta Data Inputs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

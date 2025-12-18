@@ -1,15 +1,15 @@
-import './_profile.scss';
+
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CURRENT_USER, MOCK_NOTES, getUserById } from '../../constants';
-import { UserRole, NoteStatus, Note } from '../../types';
-import {
-    Award,
-    BookOpen,
-    FileText,
-    Settings,
-    Edit3,
-    MapPin,
+import { CURRENT_USER, MOCK_NOTES, getUserById } from '../constants';
+import { UserRole, NoteStatus, Note } from '../types';
+import { 
+    Award, 
+    BookOpen, 
+    FileText, 
+    Settings, 
+    Edit3, 
+    MapPin, 
     Calendar,
     Star,
     BadgeCheck,
@@ -24,11 +24,12 @@ const NoteCardMinimal: React.FC<{ note: Note }> = ({ note }) => (
         <div className="flex-1 min-w-0">
             <div className="flex justify-between">
                 <h4 className="font-bold text-slate-800 truncate">{note.title}</h4>
-                <span className={`text-xs px-2 py-1 rounded-md font-bold ${note.status === NoteStatus.PUBLISHED ? 'bg-green-100 text-green-700' :
+                <span className={`text-xs px-2 py-1 rounded-md font-bold ${
+                    note.status === NoteStatus.PUBLISHED ? 'bg-green-100 text-green-700' : 
                     note.status === NoteStatus.PENDING ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
-                    }`}>
-                    {note.status === NoteStatus.PUBLISHED ? 'منتشر شده' :
-                        note.status === NoteStatus.PENDING ? 'در انتظار' : 'رد شده'}
+                }`}>
+                    {note.status === NoteStatus.PUBLISHED ? 'منتشر شده' : 
+                     note.status === NoteStatus.PENDING ? 'در انتظار' : 'رد شده'}
                 </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">{note.course} • {note.createdAt}</p>
@@ -63,43 +64,38 @@ const ProfilePage = () => {
                 <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-700"></div>
                 <div className="px-8 pb-8">
                     <div className="relative flex justify-between items-end -mt-12 mb-6">
-                        <div className="user__details flex items-end gap-6 w-full">
+                        <div className="flex items-end gap-6">
                             <div className="w-32 h-32 rounded-3xl border-4 border-white overflow-hidden bg-white shadow-lg">
                                 <img src={user.avatarUrl} alt="" className="w-full h-full object-cover" />
                             </div>
-                            <div className="user__bio mb-2 gap-6 flex items-center justify-between w-full">
-                                <div className="user__name flex gap-4">
-                                     <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <div className="mb-2">
+                                <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
                                     {user.name}
                                     {user.role === UserRole.INSTRUCTOR && (
                                         <BadgeCheck className="text-blue-600 fill-blue-100" />
                                     )}
                                 </h1>
-                                    <p className="text-slate-500 flex items-center gap-2">
-                                        {user.role === UserRole.STUDENT ? 'دانشجو' : 'استاد'}
-                                        {user.fieldOfStudy && (
-                                            <span className="flex items-center gap-1 before:content-['•'] before:mx-1 before:text-slate-300">
-                                                {user.fieldOfStudy}
-                                            </span>
-                                        )}
-                                    </p>
-
-                                </div>
-                               
-                                {isOwnProfile ? (
-                                    <Link to="/profile/edit" className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-xl text-slate-700 font-bold hover:bg-slate-50 transition-colors">
-                                        <Settings size={18} />
-                                        <span>ویرایش پروفایل</span>
-                                    </Link>
-                                ) : (
-                                    <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
-                                        <MessageCircle size={18} />
-                                        <span>ارسال پیام</span>
-                                    </button>
-                                )}
+                                <p className="text-slate-500 flex items-center gap-2">
+                                    {user.role === UserRole.STUDENT ? 'دانشجو' : 'استاد'}
+                                    {user.fieldOfStudy && (
+                                        <span className="flex items-center gap-1 before:content-['•'] before:mx-1 before:text-slate-300">
+                                            {user.fieldOfStudy}
+                                        </span>
+                                    )}
+                                </p>
                             </div>
                         </div>
-
+                        {isOwnProfile ? (
+                            <Link to="/profile/edit" className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-xl text-slate-700 font-bold hover:bg-slate-50 transition-colors">
+                                <Settings size={18} />
+                                <span>ویرایش پروفایل</span>
+                            </Link>
+                        ) : (
+                            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
+                                <MessageCircle size={18} />
+                                <span>ارسال پیام</span>
+                            </button>
+                        )}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

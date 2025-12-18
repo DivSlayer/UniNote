@@ -2,17 +2,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Clock, ArrowLeft, MoreVertical, GraduationCap } from 'lucide-react';
+import { MOCK_MY_COURSES } from '../constants';
 
 const MyCoursesPage = () => {
-    // Mock courses for the user
-    const MY_COURSES = [
-        { id: 'c1', title: 'ریاضی عمومی ۱', progress: 75, nextSession: 'دوشنبه ۱۰:۰۰', instructor: 'دکتر رضایی', color: 'bg-blue-100 text-blue-600' },
-        { id: 'c2', title: 'ساختمان داده‌ها', progress: 45, nextSession: 'سه‌شنبه ۱۴:۰۰', instructor: 'دکتر کمالی', color: 'bg-emerald-100 text-emerald-600' },
-        { id: 'c3', title: 'فیزیک ۲', progress: 30, nextSession: 'شنبه ۰۸:۰۰', instructor: 'دکتر حسابی', color: 'bg-amber-100 text-amber-600' },
-        { id: 'c4', title: 'هوش مصنوعی', progress: 90, nextSession: 'چهارشنبه ۱۶:۰۰', instructor: 'دکتر شریفی', color: 'bg-purple-100 text-purple-600' },
-        { id: 'c5', title: 'مدارهای منطقی', progress: 10, nextSession: 'یک‌شنبه ۱۰:۰۰', instructor: 'دکتر محمدی', color: 'bg-rose-100 text-rose-600' },
-    ];
-
     return (
         <div className="space-y-6">
              <div className="flex items-center justify-between">
@@ -26,7 +18,7 @@ const MyCoursesPage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {MY_COURSES.map(course => (
+                {MOCK_MY_COURSES.map(course => (
                     <div key={course.id} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-lg transition-all group relative">
                         <Link to={`/course/${course.id}`} className="absolute inset-0 z-0"></Link>
                         <button className="absolute top-4 left-4 text-slate-400 hover:text-slate-600 z-10">

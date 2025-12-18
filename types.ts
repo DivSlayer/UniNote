@@ -39,6 +39,7 @@ export interface Note {
   rating: number; // 1-5
   createdAt: string;
   tags: string[];
+  visibility: 'PUBLIC' | 'CLASS';
 }
 
 export interface Comment {

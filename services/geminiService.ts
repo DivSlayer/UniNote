@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || 'demo-key' });
@@ -53,3 +54,29 @@ export const generateSampleQuestions = async (noteTitle: string): Promise<string
         return ["خطا در تولید سوالات."];
     }
 }
+
+export const generateVideoSummary = async (courseTitle: string, topic: string): Promise<string> => {
+  if (!process.env.API_KEY) {
+    return `در این جلسه از درس "${courseTitle}"، مباحث کلیدی مربوط به "${topic}" توسط استاد ارائه شد. سرفصل‌های بررسی شده شامل تعاریف پایه، بررسی نمونه‌های عملی و پاسخ به سوالات دانشجویان بود. (این یک نسخه نمایشی است - کلید API یافت نشد)`;
+  }
+
+  try {
+    const prompt = `
+      به عنوان یک دستیار هوشمند دانشگاهی، یک خلاصه ساختاریافته و کوتاه برای ویدیوی ضبط شده کلاس درس زیر بنویس:
+      درس: ${courseTitle}
+      موضوع جلسه: ${topic}
+      
+      خلاصه باید شامل ۳ الی ۴ نکته کلیدی احتمالی باشد که در این جلسه تدریس شده است. لحن باید رسمی و آموزشی باشد.
+    `;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
+
+    return response.text || "خلاصه‌ای برای این ویدیو در دسترس نیست.";
+  } catch (error) {
+    console.error("Gemini Video Summary Error:", error);
+    return "خطا در برقراری ارتباط با هوش مصنوعی برای تولید خلاصه ویدیو.";
+  }
+};

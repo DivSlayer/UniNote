@@ -13,7 +13,8 @@ import {
     FileText,
     BrainCircuit,
     ThumbsUp,
-    Check
+    Check,
+    Users
 } from 'lucide-react';
 
 const NoteDetailsPage = () => {
@@ -63,9 +64,17 @@ const NoteDetailsPage = () => {
                 <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <span className="inline-block px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold mb-2">
-                                {note.course}
-                            </span>
+                            <div className="flex flex-wrap items-center gap-2 mb-2">
+                                <span className="inline-block px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold">
+                                    {note.course}
+                                </span>
+                                {note.visibility === 'CLASS' && (
+                                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 text-amber-700 rounded-lg text-sm font-bold">
+                                        <Users size={14} />
+                                        مخصوص کلاس
+                                    </span>
+                                )}
+                            </div>
                             <h1 className="text-2xl font-bold text-slate-900">{note.title}</h1>
                         </div>
                         <button 

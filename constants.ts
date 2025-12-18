@@ -18,6 +18,86 @@ export const MOCK_INSTRUCTORS: User[] = [
   { id: 'u8', name: 'دکتر شریفی', role: UserRole.INSTRUCTOR, avatarUrl: 'https://picsum.photos/seed/u8/200', points: 6500, university: 'دانشگاه تهران', fieldOfStudy: 'نرم‌افزار' },
 ];
 
+export const MOCK_MY_COURSES = [
+  { id: 'c1', title: 'ریاضی عمومی ۱', progress: 75, nextSession: 'دوشنبه ۱۰:۰۰', instructor: 'دکتر رضایی', color: 'bg-blue-100 text-blue-600' },
+  { id: 'c2', title: 'ساختمان داده‌ها', progress: 45, nextSession: 'سه‌شنبه ۱۴:۰۰', instructor: 'دکتر کمالی', color: 'bg-emerald-100 text-emerald-600' },
+  { id: 'c3', title: 'فیزیک ۲', progress: 30, nextSession: 'شنبه ۰۸:۰۰', instructor: 'دکتر حسابی', color: 'bg-amber-100 text-amber-600' },
+  { id: 'c4', title: 'هوش مصنوعی', progress: 90, nextSession: 'چهارشنبه ۱۶:۰۰', instructor: 'دکتر شریفی', color: 'bg-purple-100 text-purple-600' },
+  { id: 'c5', title: 'مدارهای منطقی', progress: 10, nextSession: 'یک‌شنبه ۱۰:۰۰', instructor: 'دکتر محمدی', color: 'bg-rose-100 text-rose-600' },
+];
+
+export const MOCK_ONLINE_CLASSES = [
+  {
+    id: 'oc1',
+    courseId: 'c1',
+    courseTitle: 'ریاضی عمومی ۱',
+    topic: 'کلاس حل تمرین انتگرال',
+    instructor: 'دکتر رضایی',
+    date: '۱۴۰۲/۰۸/۲۰',
+    time: '۱۰:۰۰',
+    duration: 90,
+    platform: 'Adobe Connect',
+    link: '#',
+    status: 'UPCOMING'
+  },
+  {
+    id: 'oc2',
+    courseId: 'c4',
+    courseTitle: 'هوش مصنوعی',
+    topic: 'مرور مباحث جستجو',
+    instructor: 'دکتر شریفی',
+    date: '۱۴۰۲/۰۸/۲۲',
+    time: '۱۶:۰۰',
+    duration: 60,
+    platform: 'Skyroom',
+    link: '#',
+    status: 'UPCOMING'
+  },
+  {
+    id: 'oc3',
+    courseId: 'c2',
+    courseTitle: 'ساختمان داده‌ها',
+    topic: 'جلسه رفع اشکال درخت‌ها',
+    instructor: 'دکتر کمالی',
+    date: '۱۴۰۲/۰۸/۱۸',
+    time: '۱۴:۰۰',
+    duration: 90,
+    platform: 'Google Meet',
+    link: '#',
+    status: 'ENDED',
+    videoUrl: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+    thumbnailUrl: 'https://picsum.photos/seed/oc3/400/225'
+  },
+  {
+    id: 'oc4',
+    courseId: 'c3',
+    courseTitle: 'فیزیک ۲',
+    topic: 'جلسه رفع اشکال',
+    instructor: 'دکتر حسابی',
+    date: '۱۴۰۲/۰۸/۲۵',
+    time: '۰۸:۰۰',
+    duration: 90,
+    platform: 'BigBlueButton',
+    link: '#',
+    status: 'UPCOMING'
+  },
+  {
+    id: 'oc5',
+    courseId: 'c1',
+    courseTitle: 'ریاضی عمومی ۱',
+    topic: 'جلسه مقدماتی مشتق',
+    instructor: 'دکتر رضایی',
+    date: '۱۴۰۲/۰۷/۱۵',
+    time: '۱۰:۰۰',
+    duration: 120,
+    platform: 'Adobe Connect',
+    link: '#',
+    status: 'ENDED',
+    videoUrl: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+    thumbnailUrl: 'https://picsum.photos/seed/oc5/400/225'
+  }
+];
+
 export const MOCK_NOTES: Note[] = [
   {
     id: 'n1',
@@ -34,8 +114,9 @@ export const MOCK_NOTES: Note[] = [
     likes: 120,
     views: 1500,
     rating: 4.8,
-    createdAt: '۱۴۰۲/۰۷/۱۵',
-    tags: ['ریاضی', 'انتگرال', 'خلاصه']
+    createdAt: '۱۴۰۲/۰۸/۱۵',
+    tags: ['ریاضی', 'انتگرال', 'خلاصه'],
+    visibility: 'PUBLIC'
   },
   {
     id: 'n2',
@@ -53,7 +134,8 @@ export const MOCK_NOTES: Note[] = [
     views: 890,
     rating: 4.5,
     createdAt: '۱۴۰۳/۰۲/۱۰',
-    tags: ['AI', 'ماشین لرنینگ', 'جستجو']
+    tags: ['AI', 'ماشین لرنینگ', 'جستجو'],
+    visibility: 'PUBLIC'
   },
   {
     id: 'n3',
@@ -71,7 +153,8 @@ export const MOCK_NOTES: Note[] = [
     views: 300,
     rating: 4.2,
     createdAt: '۱۴۰۲/۰۸/۰۱',
-    tags: ['فیزیک', 'الکتریسیته']
+    tags: ['فیزیک', 'الکتریسیته'],
+    visibility: 'CLASS'
   },
   {
     id: 'n4',
@@ -89,7 +172,8 @@ export const MOCK_NOTES: Note[] = [
     views: 10,
     rating: 0,
     createdAt: '۱۴۰۲/۱۱/۲۰',
-    tags: ['Data Structures', 'C++']
+    tags: ['Data Structures', 'C++'],
+    visibility: 'PUBLIC'
   }
 ];
 

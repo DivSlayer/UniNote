@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { HashRouter, Routes, Route, Link, useLocation, BrowserRouter } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
   Home, 
   Search, 
@@ -17,7 +17,11 @@ import {
   ChevronLeft,
   ClipboardCheck,
   QrCode,
-  UserPlus
+  UserPlus,
+  FileText,
+  Video,
+  Monitor,
+  Film // Added Film Icon
 } from 'lucide-react';
 import { CURRENT_USER } from './constants';
 import { UserRole } from './types';
@@ -27,9 +31,9 @@ import Dashboard from './pages/Dashboard';
 import SearchPage from './pages/Search';
 import UploadPage from './pages/Upload';
 import LeaderboardPage from './pages/Leaderboard';
-import ModerationPage from './pages/Moderation/Moderation';
+import ModerationPage from './pages/Moderation';
 import NoteDetailsPage from './pages/NoteDetails';
-import ProfilePage from './pages/Profile/Profile';
+import ProfilePage from './pages/Profile';
 import ProfileEditPage from './pages/ProfileEdit';
 import MyCoursesPage from './pages/MyCourses';
 import AddCoursePage from './pages/AddCourse';
@@ -39,6 +43,11 @@ import NotificationsPage from './pages/Notifications';
 import LoginPage from './pages/Login';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import MyQRCodePage from './pages/MyQRCode';
+import MyNotesPage from './pages/MyNotes';
+import RequestOnlineClassPage from './pages/RequestOnlineClass';
+import OnlineClassesPage from './pages/OnlineClasses';
+import VirtualClassroomPage from './pages/VirtualClassroom';
+import RecordedClassesPage from './pages/RecordedClasses'; // Added import
 
 // Layout Components
 const SidebarItem = ({ 
@@ -74,7 +83,6 @@ const SidebarItem = ({
       {label}
     </span>
     
-    {/* Tooltip for collapsed mode */}
     {!expanded && (
       <div className="absolute right-full mr-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-opacity">
         {label}
@@ -84,7 +92,7 @@ const SidebarItem = ({
 );
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false); // Default collapsed on desktop, hidden on mobile
+  const [sidebarOpen, setSidebarOpen] = useState(false); 
   const location = useLocation();
   const isAdmin = CURRENT_USER.role === UserRole.ADMIN || CURRENT_USER.role === UserRole.INSTRUCTOR; 
   const isClassRep = CURRENT_USER.role === UserRole.CLASS_REP;
@@ -92,9 +100,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
 
+  const isVirtualClassroom = location.pathname.startsWith('/online-class/');
+
+  if (isVirtualClassroom) {
+    return <div className="h-screen w-full bg-slate-900">{children}</div>;
+  }
+
   return (
     <div className="flex h-screen bg-slate-50 text-slate-800 overflow-hidden">
-      {/* Sidebar Overlay (Backdrop) - Only for Mobile when open */}
       <div 
         className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity lg:hidden ${
           sidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
@@ -102,13 +115,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         onClick={closeSidebar}
       />
 
-      {/* Sidebar */}
       <aside className={`
         fixed lg:static inset-y-0 right-0 z-50 bg-white border-l border-slate-200 
         shadow-2xl lg:shadow-none transition-all duration-300 ease-in-out h-full flex flex-col flex-shrink-0
         ${sidebarOpen ? 'w-72 translate-x-0' : 'w-72 lg:w-20 translate-x-full lg:translate-x-0'}
       `}>
-        {/* Logo */}
         <div className={`
             border-b border-slate-100 flex items-center flex-shrink-0 transition-all duration-300
             ${sidebarOpen ? 'p-6 justify-between' : 'p-4 justify-center'}
@@ -122,13 +133,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     <p className="text-xs text-slate-500 whitespace-nowrap">اشتراک دانش</p>
                 </div>
             </div>
-            {/* Mobile Close Button */}
             <button onClick={closeSidebar} className={`text-slate-500 hover:text-red-500 transition-colors lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
               <X size={24} />
             </button>
         </div>
 
-        {/* User Profile Mini */}
         <div className={`flex-shrink-0 transition-all duration-300 ${sidebarOpen ? 'p-6 pb-2' : 'p-2 pb-2'}`}>
             <Link to="/profile" onClick={closeSidebar} className="block">
             <div className={`
@@ -147,13 +156,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </Link>
         </div>
 
-        {/* Navigation */}
-        <nav className={`flex-1 space-y-2 overflow-y-auto overflow-x-hidden custom-scrollbar ${sidebarOpen ? 'px-4 py-4' : 'px-2 py-4'}`}>
+        <nav className={`flex-1 space-y-2 overflow-y-auto custom-scrollbar ${sidebarOpen ? 'px-4 py-4' : 'px-2 py-4'}`}>
             <SidebarItem to="/" icon={Home} label="داشبورد" active={location.pathname === '/'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/my-courses" icon={BookMarked} label="درس‌های من" active={location.pathname.startsWith('/my-courses') || location.pathname.startsWith('/course/')} onClick={closeSidebar} expanded={sidebarOpen} />
+            <SidebarItem to="/online-classes" icon={Monitor} label="کلاس‌های آنلاین" active={location.pathname === '/online-classes'} onClick={closeSidebar} expanded={sidebarOpen} />
+            <SidebarItem to="/recorded-classes" icon={Film} label="آرشیو ویدیوها" active={location.pathname === '/recorded-classes'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/messages" icon={MessageSquare} label="پیام‌ها" active={location.pathname === '/messages'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/search" icon={Search} label="جستجو و کاوش" active={location.pathname === '/search'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/upload" icon={UploadCloud} label="بارگذاری جزوه" active={location.pathname === '/upload'} onClick={closeSidebar} expanded={sidebarOpen} />
+            <SidebarItem to="/my-notes" icon={FileText} label="جزوات من" active={location.pathname === '/my-notes'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/leaderboard" icon={Award} label="برترین‌ها" active={location.pathname === '/leaderboard'} onClick={closeSidebar} expanded={sidebarOpen} />
             <SidebarItem to="/my-qr" icon={QrCode} label="کارت دیجیتال" active={location.pathname === '/my-qr'} onClick={closeSidebar} expanded={sidebarOpen} />
             
@@ -163,6 +174,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     <p className={`text-xs font-bold text-slate-400 mb-2 transition-opacity duration-300 ${sidebarOpen ? 'block' : 'hidden'}`}>مدیریت</p>
                     {!sidebarOpen && <div className="h-1 w-8 bg-slate-100 mx-auto rounded-full mb-2"></div>}
                 </div>
+                <SidebarItem 
+                    to="/request-online-class" 
+                    icon={Video} 
+                    label="درخواست کلاس آنلاین" 
+                    active={location.pathname === '/request-online-class'} 
+                    onClick={closeSidebar} 
+                    expanded={sidebarOpen} 
+                />
+                
                 {isAdmin && (
                   <SidebarItem to="/moderation" icon={ShieldCheck} label="بررسی محتوا" active={location.pathname === '/moderation'} onClick={closeSidebar} expanded={sidebarOpen} />
                 )}
@@ -175,7 +195,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             )}
         </nav>
 
-        {/* Footer Actions */}
         <div className={`border-t border-slate-100 flex-shrink-0 ${sidebarOpen ? 'p-4' : 'p-2'}`}>
             <Link to="/login" className={`
                 flex w-full items-center gap-x-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors
@@ -189,9 +208,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Header (Visible on all screens) */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 z-30 flex-shrink-0 sticky top-0">
           <div className="flex items-center gap-3">
              <button onClick={toggleSidebar} className="text-slate-600 p-2 hover:bg-slate-100 rounded-lg transition-colors">
@@ -206,7 +223,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </Link>
         </header>
 
-        {/* Content Body */}
         <div className="flex-1 overflow-auto p-4 lg:p-8">
            <div className="max-w-6xl mx-auto w-full">
             {children}
@@ -219,22 +235,25 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        {/* Auth Routes - No Layout */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-        {/* Application Routes - With Layout */}
         <Route path="/*" element={
           <Layout>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/upload" element={<UploadPage />} />
+              <Route path="/my-notes" element={<MyNotesPage />} />
               <Route path="/leaderboard" element={<LeaderboardPage />} />
               <Route path="/moderation" element={<ModerationPage />} />
               <Route path="/class-approval" element={<ModerationPage />} />
+              <Route path="/request-online-class" element={<RequestOnlineClassPage />} />
+              <Route path="/online-classes" element={<OnlineClassesPage />} />
+              <Route path="/recorded-classes" element={<RecordedClassesPage />} />
+              <Route path="/online-class/:id" element={<VirtualClassroomPage />} />
               <Route path="/note/:id" element={<NoteDetailsPage />} />
               <Route path="/course/:id" element={<CourseDetailsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
@@ -249,6 +268,6 @@ export default function App() {
           </Layout>
         } />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
